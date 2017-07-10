@@ -22,9 +22,26 @@ public class EstabelecimentoServico {
         bdestab.insereEstabelecimento(estab);
     }
 
-    public ArrayList getEstab() {
+    public Estabelecimento getEstab() {
         BDEstabelecimento bdestab = new BDEstabelecimento();
         return bdestab.listaEstabelecimentos();
     }
+
+    public Estabelecimento buscaPorCNPJ(int cnpj){
+        String cn = Integer.toString(cnpj);
+        BDEstabelecimento bdestab = new BDEstabelecimento();
+        Estabelecimento estab = bdestab.buscaPorCodigo(cn);
+        return estab;
+    }
+    
+    public void excluirEstabelecimento(Estabelecimento estab){
+        BDEstabelecimento bdestab = new BDEstabelecimento();
+        bdestab.excluirEstabelecimento(estab);
+    } 
+    
+    public void atualizaEstabelecimento(Estabelecimento estab){
+        BDEstabelecimento bdestab = new BDEstabelecimento();
+        bdestab.atualizaEstabelecimento(estab);
+    }      
     
 }

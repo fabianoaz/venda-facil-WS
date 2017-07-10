@@ -25,5 +25,21 @@ public class UsuarioServico {
     public ArrayList getUsu() {
         BDUsuario bdusu = new BDUsuario();
         return bdusu.listaUsuarios();
+    }
+
+    public Usuario buscaPorCPF(String cpf){
+        BDUsuario bdusu = new BDUsuario();
+        Usuario usu = bdusu.buscaPorCodigo(cpf);
+        return usu;
+    }
+    
+    public void excluirUsuario(Usuario usu){
+        BDUsuario bdusu = new BDUsuario();
+        bdusu.excluirUsuario(usu);
+    } 
+    
+    public void atualizaUsuario(Usuario usu){
+        BDUsuario bdusu = new BDUsuario();
+        bdusu.atualizaUsuario(usu);
     }    
 }

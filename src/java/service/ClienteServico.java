@@ -26,5 +26,21 @@ public class ClienteServico {
         BDCliente bdcli = new BDCliente();
         return bdcli.listaClientes();
     }
+    
+    public Cliente buscaPorCPF(String cpf){
+        BDCliente bdcli = new BDCliente();
+        Cliente cli = bdcli.buscaPorCodigo(cpf);
+        return cli;
+    }
+    
+    public void excluirCliente(Cliente cli){
+        BDCliente bdcli = new BDCliente();
+        bdcli.excluirCliente(cli);
+    }
+
+    public void atualizaCliente(Cliente cli){
+        BDCliente bdcli = new BDCliente();
+        bdcli.atualizaCliente(cli);
+    }       
 
 }

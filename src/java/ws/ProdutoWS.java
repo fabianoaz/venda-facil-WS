@@ -46,7 +46,7 @@ public class ProdutoWS {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void adicionarCliente(Produto p, 
+    public void adicionarProduto(Produto p, 
             @Context final HttpServletResponse response){
         
         produtoServico.novoProd(p);
@@ -64,6 +64,12 @@ public class ProdutoWS {
         return produtoServico.getProd();
     }
     
+    @GET
+    @Path("/{codigo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Produto produtoPorCodigo(@PathParam("codigo") int cod){
+        return produtoServico.buscaPorCodigo(cod);
+    }
     
     @DELETE
     @Path("/{codigo}")
@@ -72,7 +78,18 @@ public class ProdutoWS {
         Produto p = produtoServico.buscaPorCodigo(cod);
         produtoServico.excluirProduto(p);
         return p;
-    }    
+    }  
     
-    
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void atualizaProduto(Produto p, 
+            @Context final HttpServletResponse response){
+        produtoServico.atualizaProduto(p);
+        response.setStatus(HttpServletResponse.SC_CREATED);
+        try{
+            response.flushBuffer();
+        }catch (IOException e){
+            throw new InternalServerErrorException();
+        }
+    }
 }

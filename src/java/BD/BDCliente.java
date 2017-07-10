@@ -28,7 +28,7 @@ public class BDCliente {
 
         try {
 
-            PreparedStatement ps = c.prepareStatement("select cpf, nome, endereco, telefone from tbcliente");
+            PreparedStatement ps = c.prepareStatement("select cpf, nome, endereco, telefone,datacriacao,dataexclusao from tbcliente where dataexclusao is null");
 
             ResultSet rs = ps.executeQuery();
 
@@ -74,8 +74,8 @@ public class BDCliente {
 
         try {
 
-            String InsertSQL = "INSERT INTO tbcliente (cpf,nome,endereco,telefone) "
-                    + "values (?,?,?,?)";
+            String InsertSQL = "INSERT INTO tbcliente (cpf,nome,endereco,telefone, datacriacao, dataexclusao) "
+                    + "values (?,?,?,?, now(), null)";
 
             PreparedStatement ps = c.prepareStatement(InsertSQL);
 
@@ -99,4 +99,113 @@ public class BDCliente {
         }
     }
 
+    public Cliente buscaPorCodigo(String cpf) {
+
+        BDConnection conn = new BDConnection();
+        Connection c = conn.Conexao();
+        Cliente cli = new Cliente();
+
+        try {
+
+            String InsertSQL = "select cpf, nome, endereco, telefone,datacriacao,dataexclusao from tbcliente where cpf = '" + cpf + "'";
+
+            PreparedStatement ps = c.prepareStatement(InsertSQL);
+
+            ResultSet rs = ps.executeQuery();
+
+            try {
+                if (rs.next()) {
+                    cli.setCpf(rs.getString("cpf"));
+                    cli.setNome(rs.getString("nome"));
+                    cli.setEndereco(rs.getString("endereco"));
+                    cli.setTelefone(rs.getInt("telefone"));
+                    return cli;
+                }else{
+                    System.out.println("Não há retorno...");
+                    cli.setCpf(cpf);
+                    cli.setNome("Cliente não localizado!");
+                    return cli;
+                }                   
+            } catch (SQLException ex) {
+                System.out.println("Ocorreu o erro ao listar produtos: " + ex.getMessage());
+            } finally {
+                try {
+                    c.close();
+                } catch (SQLException ex) {
+                    System.out.println("Ocorreu o erro ao encerrar a conexão com o banco de dados: " + ex.getMessage());
+                }
+            }
+
+            System.out.println("Executou o comando: " + ps.toString());
+
+        } catch (Exception e) {
+            System.out.println("Ocorreu erro ao inserir o registro: " + e.getMessage());
+        } finally {
+            try {
+                c.close();
+            } catch (SQLException ex) {
+                System.out.println("Ocorreu um erro ao fechar a conexão: " + ex.getMessage());
+            }
+        }
+
+        return null;
+    }
+	
+    public Cliente excluirCliente(Cliente cli) {
+
+        BDConnection conn = new BDConnection();
+        Connection c = conn.Conexao();
+        String cpf = cli.getCpf();
+
+        try {
+
+            String UpdateSQL = "update tbcliente set dataexclusao = now() where cpf = '" + cpf + "'";
+
+            PreparedStatement ps = c.prepareStatement(UpdateSQL);
+
+            ps.executeUpdate();
+
+            System.out.println("\nExecutou o comando: " + ps.toString());
+
+        } catch (Exception e) {
+            System.out.println("\nOcorreu erro ao remover o registro: " + e.getMessage());
+        } finally {
+            try {
+                c.close();
+            } catch (SQLException ex) {
+                System.out.println("Ocorreu um erro ao fechar a conexão: " + ex.getMessage());
+            }
+        }
+
+        return null;
+    }		
+	
+    public Cliente atualizaCliente(Cliente cli) {
+
+        BDConnection conn = new BDConnection();
+        Connection c = conn.Conexao();
+
+        try {
+
+            String UpdateSQL = "update tbcliente set nome = '" + cli.getNome() + "' , endereco = '" + cli.getEndereco() + "' , telefone = '" + cli.getTelefone() + "' where cpf = '" + cli.getCpf() + "'";
+
+            PreparedStatement ps = c.prepareStatement(UpdateSQL);
+
+            ps.executeUpdate();
+
+            System.out.println("\nExecutou o comando: " + ps.toString());
+
+        } catch (Exception e) {
+            System.out.println("\nOcorreu erro ao atualizar o registro: " + e.getMessage());
+        } finally {
+            try {
+                c.close();
+            } catch (SQLException ex) {
+                System.out.println("Ocorreu um erro ao fechar a conexão: " + ex.getMessage());
+            }
+        }
+
+        return null;
+    }
+    
 }

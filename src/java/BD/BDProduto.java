@@ -28,7 +28,7 @@ public class BDProduto {
 
         try {
 
-            PreparedStatement ps = c.prepareStatement("select codigo, precovenda, descricao, datacriacao, dataexclusao from tbproduto where dataexclusao is null");
+            PreparedStatement ps = c.prepareStatement("select codigo, precovenda, descricao, datacriacao, dataexclusao from tbproduto where dataexclusao is null order by datacriacao");
 
             ResultSet rs = ps.executeQuery();
 
@@ -105,7 +105,7 @@ public class BDProduto {
 
         try {
 
-            String InsertSQL = "(select codigo, precovenda, descricao, datacriacao, dataexclusao from tbproduto where codigo = " + cod + ")";
+            String InsertSQL = "select codigo, precovenda, descricao, datacriacao, dataexclusao from tbproduto where codigo = " + cod ;
 
             PreparedStatement ps = c.prepareStatement(InsertSQL);
 
@@ -117,9 +117,12 @@ public class BDProduto {
                     prod.setPrecovenda(rs.getFloat("precovenda"));
                     prod.setDescricao(rs.getString("descricao"));
                     return prod;
-                } else {
+                }else{
                     System.out.println("Não há retorno...");
-                }
+                    prod.setCodigo(cod);
+                    prod.setDescricao("Produto não localizado!");
+                    return prod;
+                }                   
             } catch (SQLException ex) {
                 System.out.println("Ocorreu o erro ao listar produtos: " + ex.getMessage());
             } finally {
@@ -146,6 +149,7 @@ public class BDProduto {
     }
 
     public Produto excluirProduto(Produto prod) {
+
         BDConnection conn = new BDConnection();
         Connection c = conn.Conexao();
         int cod = prod.getCodigo();
@@ -153,10 +157,15 @@ public class BDProduto {
         try {
 
             String UpdateSQL = "update tbproduto set dataexclusao = now() where codigo = " + cod;
+
             PreparedStatement ps = c.prepareStatement(UpdateSQL);
+
             ps.executeUpdate();
+
+            System.out.println("\nExecutou o comando: " + ps.toString());
+
         } catch (Exception e) {
-            System.out.println("Ocorreu erro ao remover o registro: " + e.getMessage());
+            System.out.println("\nOcorreu erro ao remover o registro: " + e.getMessage());
         } finally {
             try {
                 c.close();
@@ -168,4 +177,31 @@ public class BDProduto {
         return null;
     }
 
+    public Produto atualizaProduto(Produto prod) {
+
+        BDConnection conn = new BDConnection();
+        Connection c = conn.Conexao();
+
+        try {
+
+            String UpdateSQL = "update tbproduto set precovenda = " + prod.getPrecovenda() + " , descricao = '" + prod.getDescricao() + "' where codigo = " + prod.getCodigo();
+
+            PreparedStatement ps = c.prepareStatement(UpdateSQL);
+
+            ps.executeUpdate();
+
+            System.out.println("\nExecutou o comando: " + ps.toString());
+
+        } catch (Exception e) {
+            System.out.println("\nOcorreu erro ao atualizar o registro: " + e.getMessage());
+        } finally {
+            try {
+                c.close();
+            } catch (SQLException ex) {
+                System.out.println("Ocorreu um erro ao fechar a conexão: " + ex.getMessage());
+            }
+        }
+
+        return null;
+    }
 }

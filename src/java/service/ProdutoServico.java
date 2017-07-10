@@ -37,5 +37,10 @@ public class ProdutoServico {
         BDProduto bdprod = new BDProduto();
         bdprod.excluirProduto(p);
     }
+    
+    public void atualizaProduto(Produto p){
+        BDProduto bdprod = new BDProduto();
+        bdprod.atualizaProduto(p);
+    }
 
 }

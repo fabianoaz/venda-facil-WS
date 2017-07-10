@@ -13,12 +13,15 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
+import model.Cliente;
 import model.Estabelecimento;
 import service.EstabelecimentoServico;
 
@@ -46,19 +49,48 @@ public class EstabelecimentoWS {
     @Consumes(MediaType.APPLICATION_JSON)
     public void adicionarEstabelecimento(Estabelecimento e, 
             @Context final HttpServletResponse response){
-        
         estabelecimentoServico.novoEstab(e);
         response.setStatus(HttpServletResponse.SC_CREATED);
         try{
             response.flushBuffer();
-        }catch (IOException x){
+        }catch (IOException ex){
             throw new InternalServerErrorException();
         }
     }
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<Estabelecimento> getEstabelecimento() {
+    public Estabelecimento getEstabelecimento() {
         return estabelecimentoServico.getEstab();
     }
+    
+    @GET
+    @Path("/{cnpj}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Estabelecimento estabPorCNPJ(@PathParam("cnpj") int cnpj){
+        return estabelecimentoServico.buscaPorCNPJ(cnpj);
+    }
+    
+    @DELETE
+    @Path("/{cnpj}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Estabelecimento removerEstabelecimento(@PathParam("cnpj") int cnpj){
+        Estabelecimento e = estabelecimentoServico.buscaPorCNPJ(cnpj);
+        estabelecimentoServico.excluirEstabelecimento(e);
+        return e;
+    }    
+    
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void atualizaCliente(Estabelecimento e, 
+            @Context final HttpServletResponse response){
+        estabelecimentoServico.atualizaEstabelecimento(e);
+        response.setStatus(HttpServletResponse.SC_CREATED);
+        try{
+            response.flushBuffer();
+        }catch (IOException ex){
+            throw new InternalServerErrorException();
+        }
+    }
+    
 }

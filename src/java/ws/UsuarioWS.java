@@ -13,11 +13,13 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import model.Usuario;
 import service.UsuarioServico;
@@ -46,7 +48,6 @@ public class UsuarioWS {
     @Consumes(MediaType.APPLICATION_JSON)
     public void adicionarUsuario(Usuario u, 
             @Context final HttpServletResponse response){
-        
         usuarioServico.novoUsu(u);
         response.setStatus(HttpServletResponse.SC_CREATED);
         try{
@@ -60,6 +61,35 @@ public class UsuarioWS {
     @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<Usuario> getUsuario() {
         return usuarioServico.getUsu();
+    }
+    
+    @GET
+    @Path("/{cpf}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Usuario clientePorCodigo(@PathParam("cpf") String cpf){
+        return usuarioServico.buscaPorCPF(cpf);
+    }
+    
+    @DELETE
+    @Path("{cpf}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Usuario removerCliente(@PathParam("cpf") String cpf){
+        Usuario u = usuarioServico.buscaPorCPF(cpf);
+        usuarioServico.excluirUsuario(u);
+        return u;
+    }       
+    
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void atualizaProduto(Usuario u, 
+            @Context final HttpServletResponse response){
+        usuarioServico.atualizaUsuario(u);
+        response.setStatus(HttpServletResponse.SC_CREATED);
+        try{
+            response.flushBuffer();
+        }catch (IOException e){
+            throw new InternalServerErrorException();
+        }
     }
     
 }

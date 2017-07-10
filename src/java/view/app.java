@@ -8,11 +8,16 @@ package view;
 import BD.BDCliente;
 import model.Cliente;
 import BD.BDConnection;
+import BD.BDEstabelecimento;
 import BD.BDProduto;
 import java.util.ArrayList;
+import model.Estabelecimento;
 import model.Produto;
 import service.ClienteServico;
+import service.EstabelecimentoServico;
 import service.ProdutoServico;
+import ws.ClienteWS;
+import ws.EstabelecimentoWS;
 import ws.ProdutoWS;
 
 /**
@@ -22,35 +27,12 @@ import ws.ProdutoWS;
 public class app {
 
     public static void main(String[] args) {
+
+//        BDConnection bdc = new BDConnection();
+//        bdc.Conexao();
         
-//          BDConnection bdc = new BDConnection();
-//          bdc.Conexao();
-
-
-//        BDCliente bdcli = new BDCliente();
-//        Cliente cli = bdcli.consultaSQL("select * from tbcliente");
-//        System.out.println("Cliente: " + cli.getNome());
-//        ClienteServico cs = new ClienteServico();
-//        ArrayList lCli = new ArrayList<Cliente>();
-//        Cliente cli = new Cliente();
-//        lCli = cs.getCliente();
-//        for(int i=0;i<lCli.size();i++){
-//        System.out.println("Cliente: " + lCli.get(i).toString());
-//        }
-
-//        BDProduto bdp = new BDProduto();
-//        Produto p1 = bdp.buscaPorCodigo(3);
-//        System.out.println("Produto em BD: " + p1.getDescricao());
-        
-// ------ Este teste funcionou
-//        ProdutoServico ps = new ProdutoServico();
-//        Produto p = ps.buscaPorCodigo(3);
-//        ps.excluirProduto(p);
-
-        
-        ProdutoWS pws = new ProdutoWS();
-        pws.removerProduto(3);
-
+          ClienteWS cws = new ClienteWS();
+          cws.getCliente();
 
 
 

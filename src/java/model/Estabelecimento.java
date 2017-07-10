@@ -14,14 +14,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class Estabelecimento implements Serializable{
-    
-    int telefone;
-    String cnpj, ie, razaosocial, nomefantasia, endereco, uf;
+
+    String cnpj, ie, razaosocial, nomefantasia, endereco, uf, telefone;
 
     public Estabelecimento() {
     }
 
-    public Estabelecimento(String cnpj, String ie, int telefone, String razaosocial, String nomefantasia, String endereco, String uf) {
+    public Estabelecimento(String cnpj, String ie, String telefone, String razaosocial, String nomefantasia, String endereco, String uf) {
         this.cnpj = cnpj;
         this.ie = ie;
         this.telefone = telefone;
@@ -47,11 +46,11 @@ public class Estabelecimento implements Serializable{
         this.ie = ie;
     }
 
-    public int getTelefone() {
+    public String getTelefone() {
         return telefone;
     }
 
-    public void setTelefone(int telefone) {
+    public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
 
